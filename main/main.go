@@ -1,15 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"fmt"
 	"github.com/Skaifai/RedisProject/util"
 	"github.com/redis/go-redis/v9"
-	"os"
+	"log"
 )
 
-const version = "1.0"
+// const version = "1.0"
 
 var ctx = context.Background()
 
@@ -17,10 +16,7 @@ var ctx = context.Background()
 var currentConnection redis.Client
 
 // Global status flag
-var isConnectedToDB bool = false
-
-// Instance of a reader class, which will handle the input from the console
-var reader = bufio.NewReader(os.Stdin)
+var isConnectedToDB = false
 
 func main() {
 	// Input variable declared in advance, because we use
@@ -44,7 +40,10 @@ func main() {
 			switch input {
 			case "disconnect":
 				fmt.Println("Disconnecting...")
-				currentConnection.Close()
+				err := currentConnection.Close()
+				if err != nil {
+					log.Fatal(err)
+				}
 				isConnectedToDB = false
 			case "set":
 				fmt.Println("Setting a key-value pair...")
@@ -58,6 +57,9 @@ func main() {
 			case "delete":
 				fmt.Println("Deleting an existing key-value...")
 				DeleteString()
+			case "subscribe":
+				fmt.Println("Entering listening mode, no commands except \"exit\" are allowed.")
+				SubscribeAndListen()
 			case "exit":
 				break
 			default:
