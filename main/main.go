@@ -58,8 +58,11 @@ func main() {
 				fmt.Println("Deleting an existing key-value...")
 				DeleteString()
 			case "subscribe":
-				fmt.Println("Entering listening mode, no commands except \"exit\" are allowed.")
+				fmt.Println("Entering listening mode...")
 				SubscribeAndListen()
+			case "publish":
+				fmt.Println("Publishing a message...")
+				PublishMessage()
 			case "exit":
 				break
 			default:

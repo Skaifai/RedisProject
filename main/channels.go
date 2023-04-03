@@ -5,6 +5,7 @@ import (
 	"github.com/Skaifai/RedisProject/util"
 	"github.com/redis/go-redis/v9"
 	"log"
+	"strings"
 )
 
 var pubsub *redis.PubSub
@@ -24,6 +25,8 @@ func SubscribeAndListen() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Use the \"quit\" command to quit to exit the listening mode. No other commands are allowed.")
 
 	// Should be *Subscription, but others are possible if other actions have been
 	// taken on pubsub since it was created.
@@ -52,8 +55,8 @@ func SubscribeAndListen() {
 	go func() {
 		for {
 			input := util.ReadAndCleanString()
-			if input == "exit" {
-				quit <- input
+			if input == "quit" {
+				quit <- "quit"
 				close(quit)
 				return
 			}
@@ -67,13 +70,33 @@ func SubscribeAndListen() {
 		case message := <-ch:
 			fmt.Println("Channel: " + message.Channel + " \nMessage: " + message.Payload)
 		case <-quit:
-			fmt.Println("Quit")
+			fmt.Println("Exiting the listening mode.")
 			return
 		}
 	}
+}
 
-	//for msg := range ch {
-	//	fmt.Println("Channel: " + msg.Channel + " \nMessage: " + msg.Payload)
-	//}
+func PublishMessage() {
+	fmt.Println("A list of currently active channels:")
+	listOfChannels, err := currentConnection.PubSubChannels(ctx, "*").Result()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(listOfChannels)
 
+	fmt.Print("Enter the channels: ")
+	channelsString := util.ReadAndCleanString()
+	fmt.Print("Enter the message: ")
+	message := util.ReadAndCleanString()
+
+	channels := strings.Split(channelsString, " ")
+	for _, channel := range channels {
+		currentConnection.Publish(ctx, channel, message)
+		channelSubscribers, err := currentConnection.PubSubNumSub(ctx, channel).Result()
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Channel: " + channel)
+		fmt.Println("Receivers:", channelSubscribers[channel])
+	}
 }
