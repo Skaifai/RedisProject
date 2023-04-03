@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+// SetString function prompts the user to enter a key, a value, and an expiry duration. It then sets the specified
+// key-value pair with the given expiry time.
 func SetString() {
 	fmt.Print("Enter the key: ")
 	key := util.ReadAndCleanString()
@@ -26,6 +28,7 @@ func SetString() {
 	currentConnection.Set(ctx, key, val, exp)
 }
 
+// GetString function prompts the user to enter a key and retrieves the corresponding value from the Redis store.
 func GetString() {
 	fmt.Print("Enter the key: ")
 	key := util.ReadAndCleanString()
@@ -37,6 +40,8 @@ func GetString() {
 	fmt.Println("Value: " + val)
 }
 
+// UpdateString function prompts the user to enter a key and a new value, and attempts to update the key-value pair
+// with the new value. If the key does not exist, it prints an error message.
 func UpdateString() {
 	fmt.Print("Enter the key: ")
 	key := util.ReadAndCleanString()
@@ -55,6 +60,8 @@ func UpdateString() {
 	fmt.Println("Value: " + oldValue + " --> " + val)
 }
 
+// DeleteString function prompts the user to enter a key and deletes the corresponding key-value pair
+// from the Redis store. It also prints the key and value of the deleted pair.
 func DeleteString() {
 	fmt.Print("Enter the key: ")
 	key := util.ReadAndCleanString()

@@ -10,6 +10,8 @@ import (
 
 var pubsub *redis.PubSub
 
+// SubscribeAndListen asks the user to input the channels to subscribe to, subscribes to these channels, and listens for messages on these
+// channels until the user enters the "quit" command. While listening, it prints out any received messages.
 func SubscribeAndListen() {
 	fmt.Print("Enter the channels: ")
 	channels := util.ReadAndCleanString()
@@ -76,6 +78,9 @@ func SubscribeAndListen() {
 	}
 }
 
+// PublishMessage function lists the currently active channels, asks the user to enter the channels and message
+// to publish, and publishes the message to the specified channels. For each channel, it also prints out the number of
+// subscribers that received the message.
 func PublishMessage() {
 	fmt.Println("A list of currently active channels:")
 	listOfChannels, err := currentConnection.PubSubChannels(ctx, "*").Result()
