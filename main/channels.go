@@ -28,7 +28,7 @@ func SubscribeAndListen() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Use the \"quit\" command to quit to exit the listening mode. No other commands are allowed.")
+	fmt.Println("Use the \"quit\" command to exit the listening mode. No other commands are allowed.")
 
 	// Should be *Subscription, but others are possible if other actions have been
 	// taken on pubsub since it was created.

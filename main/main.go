@@ -6,6 +6,7 @@ import (
 	"github.com/Skaifai/RedisProject/util"
 	"github.com/redis/go-redis/v9"
 	"log"
+	"time"
 )
 
 // const version = "1.0"
@@ -17,6 +18,8 @@ var currentConnection redis.Client
 
 // Global status flag
 var isConnectedToDB = false
+
+var connectionTimer *time.Timer
 
 func main() {
 	// Input variable declared in advance, because we use
